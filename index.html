@@ -1,40 +1,1088 @@
-🏠 Apartment Tracker — Pittsburgh
-Bus-accessible housing near UPMC Western Psychiatric · Smart auto-detection + AI assistant
-Budget: $1,200/mo
-Work: WPIC Oakland
-✦ AI-powered
-My Listings
-Pipeline
-Bus Routes
-Search
-✦ AI Assistant
-⚙ Zillow Setup
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apartment Tracker — Pittsburgh</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#fff;--bg2:#f5f5f3;--bg3:#eeede9;
+  --text:#1a1a18;--text2:#6b6b66;--text3:#9c9a92;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.22);
+  --green:#1D9E75;--green-bg:#E1F5EE;--green-text:#0F6E56;
+  --blue:#185FA5;--blue-bg:#E6F1FB;--blue-text:#0C447C;
+  --amber-bg:#FAEEDA;--amber-text:#854F0B;
+  --red-bg:#FAECE7;--red-text:#993C1D;
+  --purple:#534AB7;--purple-bg:#EEEDFE;--purple-text:#3C3489;
+  --teal-bg:#E1F5EE;--teal-text:#085041;
+  --r:8px;--rl:12px;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;
+  --text:#e8e6de;--text2:#9c9a92;--text3:#6b6b66;
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --green-bg:#085041;--green-text:#9FE1CB;
+  --blue-bg:#0C447C;--blue-text:#B5D4F4;
+  --amber-bg:#633806;--amber-text:#FAC775;
+  --red-bg:#712B13;--red-text:#F5C4B3;
+  --purple-bg:#26215C;--purple-text:#CECBF6;
+  --teal-bg:#04342C;--teal-text:#5DCAA5;
+}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg3);color:var(--text);font-size:14px;min-height:100vh;}
+.shell{max-width:980px;margin:0 auto;background:var(--bg);min-height:100vh;border-left:.5px solid var(--border);border-right:.5px solid var(--border);}
 
-      All statuses
-      Not contacted
-      Contacted
-      Applied
-      Waitlist
-      Rejected
-    
-      Any distance
-      Within 1.2 mi of WPIC
-      Within 2.0 mi of WPIC
-      Within 3.0 mi of WPIC
-    
-      Newest first
-      Available soonest
-      Closest to WPIC
-      Rent: low → high
-      Rent: high → low
-    
-      Any availability
-      Available now
-      Available before July 1
-    
-+ From Zillow URL
-+ Add manually
-⬇ Export
-⬆ Import
+/* HEADER */
+.hdr{padding:1.5rem 1.5rem 0;border-bottom:.5px solid var(--border);}
+.hdr-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.75rem;gap:10px;flex-wrap:wrap;}
+.hdr h1{font-size:20px;font-weight:700;}
+.hdr p{font-size:12px;color:var(--text2);margin-top:3px;}
+.pills{display:flex;gap:6px;flex-wrap:wrap;}
+.pill{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;}
+.pill.g{background:var(--green-bg);color:var(--green-text);}
+.pill.b{background:var(--blue-bg);color:var(--blue-text);}
+.pill.p{background:var(--purple-bg);color:var(--purple-text);}
+.tabs{display:flex;gap:2px;padding:0 1.5rem;overflow-x:auto;}
+.tab{padding:10px 13px;font-size:13px;cursor:pointer;border:none;background:none;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-.5px;white-space:nowrap;flex-shrink:0;transition:color .15s;}
+.tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:600;}
+.tab:hover{color:var(--text);}
+.tab.ai-tab{color:var(--purple-text);}
+.tab.ai-tab.active{border-bottom-color:var(--purple);}
 
-Move-in deadline: July 1, 2026
+/* PANELS */
+.panel{display:none;padding:1.5rem;}
+.panel.active{display:block;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.25rem;}
+.sc{background:var(--bg2);border-radius:var(--r);padding:12px 14px;}
+.sc-lbl{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;}
+.sc-val{font-size:24px;font-weight:700;margin-top:4px;}
+.sc-val.g{color:var(--green);}.sc-val.b{color:var(--blue);}.sc-val.a{color:#BA7517;}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
+.toolbar input,.toolbar select{font-size:13px;padding:8px 10px;border:.5px solid var(--border2);border-radius:var(--r);background:var(--bg);color:var(--text);}
+.toolbar input{flex:1;min-width:140px;}
+.btn{padding:8px 14px;font-size:13px;border:.5px solid var(--border2);border-radius:var(--r);cursor:pointer;background:var(--bg);color:var(--text);transition:background .15s;white-space:nowrap;}
+.btn:hover{background:var(--bg2);}
+.btn.pri{background:var(--text);color:var(--bg);border-color:var(--text);}
+.btn.pri:hover{opacity:.85;}
+.btn.danger{color:var(--red-text);}
+.btn.sm{padding:4px 10px;font-size:12px;}
+.btn.z{background:var(--purple-bg);color:var(--purple-text);border-color:var(--purple);}
+.btn.z:hover{opacity:.85;}
+.btn.ai{background:var(--purple);color:#fff;border-color:var(--purple);}
+.btn.ai:hover{opacity:.85;}
+
+/* APT CARDS */
+.apt-grid{display:flex;flex-direction:column;gap:12px;}
+.apt-card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rl);padding:14px 16px;border-left-width:3px;transition:border-color .15s;}
+.apt-card:hover{border-color:var(--border2);}
+.apt-card.not-contacted{border-left-color:var(--border2);}
+.apt-card.contacted{border-left-color:var(--green);}
+.apt-card.applied{border-left-color:var(--blue);}
+.apt-card.waitlist{border-left-color:#BA7517;}
+.apt-card.rejected{border-left-color:#D85A30;}
+.apt-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.apt-left{flex:1;min-width:0;}
+.apt-name{font-size:15px;font-weight:700;}
+.apt-addr{font-size:12px;color:var(--text2);margin-top:2px;}
+.apt-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+.apt-rent{font-size:16px;font-weight:700;}
+.over-budget{color:#D85A30;}
+.badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;}
+.badge.not-contacted{background:var(--bg2);color:var(--text2);}
+.badge.contacted{background:var(--green-bg);color:var(--green-text);}
+.badge.applied{background:var(--blue-bg);color:var(--blue-text);}
+.badge.waitlist{background:var(--amber-bg);color:var(--amber-text);}
+.badge.rejected{background:var(--red-bg);color:var(--red-text);}
+.badge.z{background:var(--purple-bg);color:var(--purple-text);}
+/* AVAILABILITY BADGE */
+.avail-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:20px;margin-top:8px;}
+.avail-badge.good{background:var(--green-bg);color:var(--green-text);}
+.avail-badge.tight{background:var(--amber-bg);color:var(--amber-text);}
+.avail-badge.late{background:var(--red-bg);color:var(--red-text);}
+.avail-badge.now{background:var(--blue-bg);color:var(--blue-text);}
+.avail-badge.unknown{background:var(--bg2);color:var(--text2);}
+.deadline-bar{height:4px;border-radius:2px;background:var(--bg2);margin-top:6px;overflow:hidden;}
+.deadline-fill{height:100%;border-radius:2px;transition:width .3s;}
+
+/* AUTO-DETECT BANNER */
+.detect-banner{background:var(--teal-bg);border-radius:var(--r);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--teal-text);display:none;line-height:1.5;}
+.detect-banner.show{display:block;}
+
+/* ZILLOW STRIP */
+.z-strip{display:flex;align-items:center;gap:10px;margin-top:10px;background:var(--purple-bg);border-radius:var(--r);padding:8px 12px;}
+.z-strip-info{flex:1;min-width:0;}
+.z-strip-title{font-size:12px;font-weight:600;color:var(--purple-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.z-strip-sub{font-size:11px;color:var(--text2);margin-top:1px;}
+.z-strip a{font-size:12px;font-weight:600;color:var(--purple-text);text-decoration:none;white-space:nowrap;}
+.z-strip a:hover{text-decoration:underline;}
+
+/* INFO STRIP */
+.info-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px;}
+.ib{background:var(--bg2);border-radius:var(--r);padding:9px 11px;}
+.ib-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:5px;}
+.ib-body{font-size:12px;color:var(--text);line-height:1.5;}
+.dist-big{font-size:18px;font-weight:700;color:var(--green);}
+.dbadge{display:inline-block;font-size:10px;padding:1px 6px;border-radius:10px;margin-left:5px;vertical-align:middle;font-weight:700;}
+.dbadge.close{background:var(--green-bg);color:var(--green-text);}
+.dbadge.med{background:var(--amber-bg);color:var(--amber-text);}
+.dbadge.far{background:var(--red-bg);color:var(--red-text);}
+.bus-tag{display:inline-block;font-size:11px;background:var(--blue-bg);color:var(--blue-text);padding:2px 7px;border-radius:10px;margin:1px 2px 2px 0;font-weight:700;}
+.gr-row{font-size:12px;line-height:1.7;}
+.apt-meta{display:flex;gap:14px;margin-top:10px;font-size:12px;color:var(--text2);flex-wrap:wrap;}
+.apt-notes{margin-top:8px;font-size:12px;color:var(--text2);background:var(--bg2);padding:8px 10px;border-radius:var(--r);line-height:1.5;}
+.apt-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.empty{text-align:center;padding:3rem 1rem;color:var(--text2);font-size:13px;}
+
+/* PIPELINE */
+.pipe-cols{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.pipe-col{background:var(--bg2);border-radius:var(--rl);padding:12px;min-height:180px;}
+.pipe-col h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);margin-bottom:10px;}
+.pipe-item{background:var(--bg);border:.5px solid var(--border);border-radius:var(--r);padding:8px 10px;margin-bottom:6px;cursor:pointer;transition:border-color .15s;}
+.pipe-item:hover{border-color:var(--border2);}
+.pipe-item .pn{font-size:12px;font-weight:600;}
+.pipe-item .pm{font-size:11px;color:var(--text2);margin-top:2px;}
+
+/* BUS TABLE */
+.wpic-banner{background:var(--blue-bg);border-radius:var(--rl);padding:12px 16px;margin-bottom:1rem;font-size:13px;color:var(--blue-text);line-height:1.6;}
+.bus-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px;}
+.bus-tbl th{text-align:left;padding:8px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text2);border-bottom:.5px solid var(--border2);}
+.bus-tbl td{padding:9px 10px;border-bottom:.5px solid var(--border);vertical-align:top;line-height:1.55;}
+.bus-tbl tr:last-child td{border-bottom:none;}
+.bus-tbl tr:hover td{background:var(--bg2);}
+
+/* SEARCH TAB */
+.search-box{background:var(--bg2);border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:1rem;}
+.search-box h3{font-size:14px;font-weight:700;margin-bottom:10px;}
+.sr{display:flex;gap:8px;flex-wrap:wrap;}
+.sr select{font-size:13px;padding:8px 10px;border:.5px solid var(--border2);border-radius:var(--r);background:var(--bg);color:var(--text);flex:1;min-width:120px;}
+.tip-note{font-size:12px;color:var(--text2);margin-top:8px;line-height:1.5;}
+.map-area{background:var(--bg2);border-radius:var(--rl);padding:1.5rem 1rem;text-align:center;margin-bottom:1rem;border:.5px solid var(--border);}
+.map-area p{font-size:13px;color:var(--text2);margin:6px 0 14px;line-height:1.5;}
+.map-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem;}
+.res-card{background:var(--bg);border:.5px solid var(--border);border-radius:var(--rl);padding:14px;}
+.res-card h4{font-size:13px;font-weight:700;margin-bottom:4px;}
+.res-card p{font-size:12px;color:var(--text2);margin-bottom:8px;line-height:1.5;}
+.res-card a{font-size:12px;color:var(--blue);text-decoration:none;}
+.res-card a:hover{text-decoration:underline;}
+.tips-box{background:var(--bg2);border-radius:var(--rl);padding:1rem 1.25rem;}
+.tips-box h3{font-size:13px;font-weight:700;margin-bottom:8px;}
+.tips-box ul{font-size:12px;color:var(--text2);line-height:1.9;padding-left:1.1rem;}
+
+/* ── AI ASSISTANT TAB ─────────────────────────────────────── */
+.ai-hero{background:linear-gradient(135deg,var(--purple-bg) 0%,var(--blue-bg) 100%);border-radius:var(--rl);padding:1.25rem 1.5rem;margin-bottom:1.25rem;border:.5px solid rgba(83,74,183,.2);}
+.ai-hero h2{font-size:16px;font-weight:700;color:var(--purple-text);margin-bottom:4px;}
+.ai-hero p{font-size:13px;color:var(--text2);line-height:1.6;}
+.ai-quickies{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;}
+.ai-q{font-size:12px;padding:6px 12px;border-radius:20px;border:.5px solid var(--purple);background:var(--purple-bg);color:var(--purple-text);cursor:pointer;transition:opacity .15s;}
+.ai-q:hover{opacity:.8;}
+.ai-chat{display:flex;flex-direction:column;gap:12px;margin-bottom:1rem;max-height:460px;overflow-y:auto;padding-right:4px;}
+.ai-msg{display:flex;gap:10px;align-items:flex-start;}
+.ai-msg.user{flex-direction:row-reverse;}
+.ai-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px;}
+.ai-avatar.bot{background:var(--purple-bg);color:var(--purple-text);}
+.ai-avatar.user{background:var(--blue-bg);color:var(--blue-text);}
+.ai-bubble{background:var(--bg2);border-radius:var(--rl);padding:10px 14px;font-size:13px;line-height:1.65;max-width:85%;}
+.ai-msg.user .ai-bubble{background:var(--blue-bg);color:var(--blue-text);}
+.ai-typing{display:flex;gap:4px;align-items:center;padding:4px 0;}
+.ai-typing span{width:7px;height:7px;border-radius:50%;background:var(--text3);animation:bounce .9s infinite;}
+.ai-typing span:nth-child(2){animation-delay:.18s;}
+.ai-typing span:nth-child(3){animation-delay:.36s;}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-6px);}}
+.ai-input-row{display:flex;gap:8px;}
+.ai-input-row input{flex:1;font-size:13px;padding:10px 14px;border:.5px solid var(--border2);border-radius:var(--rl);background:var(--bg);color:var(--text);}
+.ai-input-row input:focus{outline:none;border-color:var(--purple);}
+.ai-disclaimer{font-size:11px;color:var(--text3);margin-top:8px;line-height:1.5;text-align:center;}
+
+/* SETUP TAB */
+.setup-hero{background:var(--purple-bg);border-radius:var(--rl);padding:1.25rem 1.5rem;margin-bottom:1.25rem;}
+.setup-hero h2{font-size:16px;font-weight:700;color:var(--purple-text);margin-bottom:6px;}
+.setup-hero p{font-size:13px;color:var(--text2);line-height:1.6;}
+.setup-steps{display:flex;flex-direction:column;gap:16px;margin-bottom:1.5rem;}
+.setup-step{display:flex;gap:14px;align-items:flex-start;}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;margin-top:2px;}
+.step-body h4{font-size:14px;font-weight:700;margin-bottom:4px;}
+.step-body p{font-size:13px;color:var(--text2);line-height:1.6;}
+.bm-box{background:var(--bg2);border-radius:var(--rl);padding:1.25rem;margin-bottom:1.5rem;border:.5px solid var(--border2);}
+.bm-box h3{font-size:14px;font-weight:700;margin-bottom:10px;}
+.bm-drag{background:var(--bg);border:2px dashed var(--purple);border-radius:var(--rl);padding:1.25rem;text-align:center;margin-bottom:12px;}
+.bm-drag p{font-size:12px;color:var(--text2);margin-top:8px;line-height:1.5;}
+.bm-link{display:inline-block;background:var(--purple);color:#fff;padding:10px 20px;border-radius:var(--r);font-size:14px;font-weight:700;text-decoration:none;cursor:grab;}
+.bm-note{font-size:12px;color:var(--text2);line-height:1.8;background:var(--bg2);border-radius:var(--r);padding:10px 14px;}
+.manual-import{background:var(--bg2);border-radius:var(--rl);padding:1.25rem;margin-bottom:1rem;}
+.manual-import h3{font-size:14px;font-weight:700;margin-bottom:8px;}
+.manual-import p{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:10px;}
+.url-row{display:flex;gap:8px;flex-wrap:wrap;}
+.url-row input{flex:1;font-size:13px;padding:8px 10px;border:.5px solid var(--border2);border-radius:var(--r);background:var(--bg);color:var(--text);min-width:200px;}
+
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:200;padding:1rem;}
+.overlay.open{display:flex;}
+.modal{background:var(--bg);border-radius:var(--rl);padding:1.5rem;width:560px;max-width:100%;max-height:90vh;overflow-y:auto;border:.5px solid var(--border2);}
+.modal h2{font-size:16px;font-weight:700;margin-bottom:1.25rem;}
+.fg{margin-bottom:12px;}
+.fg label{font-size:12px;color:var(--text2);display:block;margin-bottom:4px;}
+.fg input,.fg select,.fg textarea{width:100%;font-size:13px;padding:8px 10px;border:.5px solid var(--border2);border-radius:var(--r);background:var(--bg);color:var(--text);}
+.fg textarea{resize:vertical;min-height:60px;line-height:1.5;}
+.fg .hint{font-size:11px;color:var(--text3);margin-top:3px;}
+.fg .ok{font-size:11px;color:var(--green);margin-top:3px;display:none;}
+.fg .detecting{font-size:11px;color:var(--blue-text);margin-top:3px;display:none;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fsec{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin:16px 0 8px;padding-top:12px;border-top:.5px solid var(--border);display:block;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:1.25rem;}
+.z-preview{background:var(--purple-bg);border-radius:var(--r);padding:10px 12px;margin-bottom:1rem;display:none;}
+.z-preview h4{font-size:12px;font-weight:700;color:var(--purple-text);margin-bottom:4px;}
+.z-preview p{font-size:12px;color:var(--text2);line-height:1.5;}
+
+@media(max-width:640px){
+  .stats{grid-template-columns:1fr 1fr;}
+  .pipe-cols{grid-template-columns:1fr 1fr;}
+  .res-grid{grid-template-columns:1fr;}
+  .fr{grid-template-columns:1fr;}
+  .info-strip{grid-template-columns:1fr;}
+  .hdr-top{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div>
+      <h1>🏠 Apartment Tracker — Pittsburgh</h1>
+      <p>Bus-accessible housing near UPMC Western Psychiatric · Smart auto-detection + AI assistant</p>
+    </div>
+    <div class="pills">
+      <span class="pill g">Budget: $1,200/mo</span>
+      <span class="pill b">Work: WPIC Oakland</span>
+      <span class="pill p">✦ AI-powered</span>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('tracker')">My Listings</button>
+    <button class="tab" onclick="switchTab('pipeline')">Pipeline</button>
+    <button class="tab" onclick="switchTab('buses')">Bus Routes</button>
+    <button class="tab" onclick="switchTab('search')">Search</button>
+    <button class="tab ai-tab" onclick="switchTab('ai')">✦ AI Assistant</button>
+    <button class="tab" onclick="switchTab('setup')">⚙ Zillow Setup</button>
+  </div>
+</div>
+
+<!-- TRACKER -->
+<div id="tab-tracker" class="panel active">
+  <div class="stats" id="stats"></div>
+  <div class="toolbar">
+    <input type="text" id="search-input" placeholder="Search name, address, neighborhood…" oninput="renderListings()">
+    <select id="filter-status" onchange="renderListings()">
+      <option value="">All statuses</option>
+      <option value="not-contacted">Not contacted</option>
+      <option value="contacted">Contacted</option>
+      <option value="applied">Applied</option>
+      <option value="waitlist">Waitlist</option>
+      <option value="rejected">Rejected</option>
+    </select>
+    <select id="filter-dist" onchange="renderListings()">
+      <option value="">Any distance</option>
+      <option value="1.2">Within 1.2 mi of WPIC</option>
+      <option value="2.0">Within 2.0 mi of WPIC</option>
+      <option value="3.0">Within 3.0 mi of WPIC</option>
+    </select>
+    <select id="filter-sort" onchange="renderListings()">
+      <option value="added">Newest first</option>
+      <option value="avail-asc">Available soonest</option>
+      <option value="dist-asc">Closest to WPIC</option>
+      <option value="rent-asc">Rent: low → high</option>
+      <option value="rent-desc">Rent: high → low</option>
+    </select>
+    <select id="filter-avail" onchange="renderListings()">
+      <option value="">Any availability</option>
+      <option value="now">Available now</option>
+      <option value="before">Available before July 1</option>
+    </select>
+    <button class="btn z" onclick="openZillowManual()">+ From Zillow URL</button>
+    <button class="btn pri" onclick="openAddModal()">+ Add manually</button>
+    <button class="btn" onclick="exportData()" title="Download all your listings as a backup file">⬇ Export</button>
+    <label class="btn" title="Restore listings from a backup file" style="cursor:pointer;margin:0;">⬆ Import<input type="file" id="import-input" accept=".json" style="display:none" onchange="importData(event)"></label>
+  </div>
+  <div id="deadline-banner" style="background:var(--amber-bg);border-radius:var(--r);padding:10px 14px;margin-bottom:1rem;font-size:13px;color:var(--amber-text);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+    <span id="deadline-text"></span>
+    <span style="font-size:11px;opacity:.8;">Move-in deadline: July 1, 2026</span>
+  </div>
+  <div class="apt-grid" id="apt-grid"></div>
+</div>
+
+<!-- PIPELINE -->
+<div id="tab-pipeline" class="panel">
+  <div class="pipe-cols" id="pipeline-cols"></div>
+</div>
+
+<!-- BUS ROUTES -->
+<div id="tab-buses" class="panel">
+  <div class="wpic-banner"><strong>Your workplace:</strong> UPMC Western Psychiatric Institute &amp; Clinic (WPIC) — 3811 O'Hara St, Pittsburgh PA 15213 (Oakland).</div>
+  <h3 style="font-size:14px;font-weight:700;margin-bottom:4px;">Bus routes to WPIC by neighborhood</h3>
+  <table class="bus-tbl">
+    <thead><tr><th>Neighborhood</th><th>Bus routes</th><th>Est. commute</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Oakland / South Oakland</strong></td><td><span class="bus-tag">71A</span><span class="bus-tag">71B</span><span class="bus-tag">71C</span><span class="bus-tag">71D</span><span class="bus-tag">54C</span><span class="bus-tag">93</span></td><td>5–15 min or walkable</td><td>Closest to WPIC. Many addresses are 10–20 min walk. 71 series runs very frequently on Forbes/Fifth past WPIC on O'Hara St.</td></tr>
+      <tr><td><strong>Shadyside</strong></td><td><span class="bus-tag">71A</span><span class="bus-tag">71B</span><span class="bus-tag">71C</span><span class="bus-tag">71D</span><span class="bus-tag">P1</span></td><td>12–20 min</td><td>71 series runs straight down Forbes Ave to the WPIC stop. Very reliable, high-frequency. One of the best options.</td></tr>
+      <tr><td><strong>Squirrel Hill</strong></td><td><span class="bus-tag">61A</span><span class="bus-tag">61B</span><span class="bus-tag">61C</span><span class="bus-tag">61D</span><span class="bus-tag">P1</span></td><td>18–28 min</td><td>61 series: Murray Ave → Forbes → Oakland. Easy 1-bus commute, no transfer. Best combo of rent, groceries &amp; transit.</td></tr>
+      <tr><td><strong>Bloomfield</strong></td><td><span class="bus-tag">54C</span><span class="bus-tag">71A</span><span class="bus-tag">71B</span></td><td>15–25 min</td><td>54C or 71 from Liberty Ave. May need short walk to stop. Use Transit App for real-time arrivals.</td></tr>
+      <tr><td><strong>Lawrenceville</strong></td><td><span class="bus-tag">54C</span><span class="bus-tag">91</span><span class="bus-tag">86</span></td><td>25–38 min</td><td>54C most direct toward Oakland. May need connection. Longer commute — worthwhile only for significant rent savings.</td></tr>
+      <tr><td><strong>East Liberty</strong></td><td><span class="bus-tag">71A</span><span class="bus-tag">71B</span><span class="bus-tag">61A</span><span class="bus-tag">P1</span></td><td>22–35 min</td><td>P1 busway is fast but goes downtown — connect to 71 for WPIC. Best grocery access: Whole Foods, Trader Joe's walkable.</td></tr>
+      <tr><td><strong>Greenfield</strong></td><td><span class="bus-tag">61B</span><span class="bus-tag">61C</span></td><td>15–25 min</td><td>61 series passes through Greenfield toward Oakland. Less frequent — check schedule for your shift start time.</td></tr>
+    </tbody>
+  </table>
+  <div class="tips-box" style="margin-top:1rem;">
+    <h3>Commute tips</h3>
+    <ul>
+      <li>Download <strong>Transit App</strong> (free) — best real-time Port Authority arrivals for Pittsburgh</li>
+      <li>The <strong>71 series</strong> runs directly past WPIC on O'Hara St — your most important route</li>
+      <li>WPIC trip planner address: <strong>3811 O'Hara St, Pittsburgh PA 15213</strong></li>
+      <li>Shifts outside 7am–7pm may have reduced frequency — always check schedule for your shift time</li>
+    </ul>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div id="tab-search" class="panel">
+  <div class="search-box">
+    <h3>Search Pittsburgh apartments near WPIC</h3>
+    <div class="sr">
+      <select id="s-n"><option value="">Any neighborhood</option><option>Oakland</option><option>Shadyside</option><option>Squirrel Hill</option><option>Bloomfield</option><option>Lawrenceville</option><option>East Liberty</option><option>Greenfield</option></select>
+      <select id="s-b"><option value="">Any type</option><option>Studio</option><option value="1BR">1 bedroom</option><option value="2BR">2 bedroom</option></select>
+      <button class="btn pri" onclick="doSearch('apts')">Apartments.com ↗</button>
+      <button class="btn z" onclick="doSearch('zillow')">Zillow ↗</button>
+    </div>
+    <p class="tip-note">All neighborhoods listed have direct bus access to WPIC. Filter "utilities included" to stay within $1,200. Not sure about a neighborhood? Ask the AI assistant!</p>
+  </div>
+  <div class="map-area">
+    <p>Scout bus routes, grocery stores, and distance to WPIC</p>
+    <div class="map-btns">
+      <button class="btn pri" onclick="window.open('https://www.google.com/maps/dir/Pittsburgh+PA/3811+O%27Hara+St+Pittsburgh+PA+15213','_blank')">Directions to WPIC ↗</button>
+      <button class="btn" onclick="window.open('https://www.google.com/maps/search/grocery+stores+near+UPMC+Oakland+Pittsburgh/@40.4417,-79.9569,14z','_blank')">Groceries nearby ↗</button>
+      <button class="btn" onclick="window.open('https://www.portauthority.org/schedules-and-maps/','_blank')">Port Authority ↗</button>
+    </div>
+  </div>
+  <div class="res-grid">
+    <div class="res-card"><h4>Zillow Pittsburgh</h4><p>Rentals under $1,200 — use the bookmarklet to save directly to tracker</p><a href="https://www.zillow.com/pittsburgh-pa/rentals/?searchQueryState=%7B%22filterState%22%3A%7B%22price%22%3A%7B%22max%22%3A1200%7D%7D%7D" target="_blank">Search Zillow →</a></div>
+    <div class="res-card"><h4>Apartments.com</h4><p>Filter utilities-included listings near Oakland</p><a href="https://www.apartments.com/pittsburgh-pa/under-1200/" target="_blank">Search →</a></div>
+    <div class="res-card"><h4>Pitt off-campus housing</h4><p>Vetted landlord listings for grad students near Oakland</p><a href="https://www.pc.pitt.edu/housing" target="_blank">Pitt Housing →</a></div>
+    <div class="res-card"><h4>Craigslist Pittsburgh</h4><p>Private-landlord listings — often has utilities-included deals</p><a href="https://pittsburgh.craigslist.org/search/apa?max_price=1200" target="_blank">Browse →</a></div>
+    <div class="res-card"><h4>HotPads</h4><p>Map-based search — filter "utilities included"</p><a href="https://hotpads.com/pittsburgh-pa/apartments-for-rent?price_max=1200" target="_blank">Search →</a></div>
+    <div class="res-card"><h4>Port Authority Trip Planner</h4><p>Plan exact commute from any address to 3811 O'Hara St</p><a href="https://www.portauthority.org/schedules-and-maps/" target="_blank">Plan a trip →</a></div>
+  </div>
+</div>
+
+<!-- AI ASSISTANT -->
+<div id="tab-ai" class="panel">
+  <div class="ai-hero">
+    <h2>✦ Pittsburgh Apartment AI Assistant</h2>
+    <p>New to Pittsburgh? Ask anything — neighborhoods, commute times, grocery stores, safety, vibe, whether a specific address works for your commute, or how to read a Zillow listing. Powered by Claude.</p>
+  </div>
+
+  <div class="ai-quickies">
+    <span class="ai-q" onclick="askQuick(this)">What's the best neighborhood for my commute to WPIC?</span>
+    <span class="ai-q" onclick="askQuick(this)">Is Squirrel Hill safe and what's it like to live there?</span>
+    <span class="ai-q" onclick="askQuick(this)">What grocery stores are near Oakland?</span>
+    <span class="ai-q" onclick="askQuick(this)">How do I read a Zillow listing for hidden costs?</span>
+    <span class="ai-q" onclick="askQuick(this)">What Pittsburgh neighborhoods fit a $1,200 all-inclusive budget?</span>
+    <span class="ai-q" onclick="askQuick(this)">What should I ask a landlord before signing a Pittsburgh lease?</span>
+    <span class="ai-q" onclick="askQuick(this)">What's the difference between Oakland and South Oakland?</span>
+    <span class="ai-q" onclick="askQuick(this)">How do Pittsburgh winters affect utility costs?</span>
+  </div>
+
+  <div class="ai-chat" id="ai-chat">
+    <div class="ai-msg">
+      <div class="ai-avatar bot">✦</div>
+      <div class="ai-bubble">Hi! I'm your Pittsburgh apartment assistant. I know your situation — you work at UPMC Western Psychiatric (WPIC) at 3811 O'Hara St in Oakland, you need bus-accessible housing, and your budget is $1,200/mo inclusive of utilities.<br><br>Ask me anything about Pittsburgh neighborhoods, bus routes, grocery stores, what to look for in a lease, or paste an address and I'll tell you everything about it — distance to WPIC, which buses to take, what's nearby, and whether it fits your budget.</div>
+    </div>
+  </div>
+
+  <div class="ai-input-row">
+    <input type="text" id="ai-input" placeholder="Ask anything about Pittsburgh apartments, neighborhoods, commutes…" onkeydown="if(event.key==='Enter')sendAI()">
+    <button class="btn ai" onclick="sendAI()">Ask ✦</button>
+  </div>
+  <p class="ai-disclaimer">AI responses are generated by Claude and may not reflect the very latest Pittsburgh developments. Always verify bus schedules on portauthority.org and listings on Zillow directly.</p>
+</div>
+
+<!-- SETUP -->
+<div id="tab-setup" class="panel">
+  <div class="setup-hero">
+    <h2>✦ Zillow Bookmarklet Setup</h2>
+    <p>The bookmarklet is a tiny button in your browser toolbar. When you find an apartment on Zillow, click it — it captures the address, rent, and URL, signals your tracker, and auto-detects the neighborhood, bus routes, distance to WPIC, and grocery stores. No login needed.</p>
+  </div>
+  <div class="setup-steps">
+    <div class="setup-step"><div class="step-num">1</div><div class="step-body"><h4>Show your bookmarks bar</h4><p>Chrome: <strong>Ctrl+Shift+B</strong> (Win) / <strong>⌘+Shift+B</strong> (Mac). Firefox: View → Toolbars → Bookmarks Toolbar. Edge: Settings → Appearance → Show favorites bar.</p></div></div>
+    <div class="setup-step"><div class="step-num">2</div><div class="step-body"><h4>Drag the button below to your bookmarks bar</h4><p>Click and hold the purple button, drag it up to your bookmarks bar, release. It will appear as "Save to Apt Tracker".</p></div></div>
+    <div class="setup-step"><div class="step-num">3</div><div class="step-body"><h4>Keep this tracker file open in a tab</h4><p>The bookmarklet communicates with this tracker via your browser. Have <strong>apartment-tracker-pittsburgh.html</strong> open before clicking it on Zillow.</p></div></div>
+    <div class="setup-step"><div class="step-num">4</div><div class="step-body"><h4>Browse Zillow and click the button</h4><p>On any Zillow listing page, click "Save to Apt Tracker". Your tracker will detect the import, auto-detect the neighborhood, and pre-fill all fields including bus routes and WPIC distance.</p></div></div>
+  </div>
+  <div class="bm-box">
+    <h3>Your bookmarklet — drag to bookmarks bar</h3>
+    <div class="bm-drag">
+      <a class="bm-link" id="bm-link" href="PLACEHOLDER" onclick="return false;">🏠 Save to Apt Tracker</a>
+      <p>Drag this button to your bookmarks bar. Do <strong>not</strong> click it here.</p>
+    </div>
+    <div class="bm-note"><strong>Drag not working?</strong> Right-click → "Bookmark this link" (Chrome) or "Bookmark Link" (Firefox).<br><strong>On mobile?</strong> Use the manual URL import below instead.</div>
+  </div>
+  <div class="manual-import">
+    <h3>Manual import — paste any listing URL</h3>
+    <p>Works with Zillow, Apartments.com, Craigslist, or any site. Paste the URL and the tracker will save it and auto-detect what it can.</p>
+    <div class="url-row">
+      <input type="text" id="manual-url" placeholder="https://www.zillow.com/homedetails/…">
+      <button class="btn z" onclick="importFromUrl()">Import listing</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- shell -->
+
+<!-- MODAL -->
+<div id="main-overlay" class="overlay" onclick="closeBg(event,'main-overlay')">
+  <div class="modal">
+    <h2 id="modal-title">Add listing</h2>
+    <div class="z-preview" id="z-preview"><h4>✦ Zillow import detected</h4><p id="z-preview-text"></p></div>
+    <div class="fr">
+      <div class="fg"><label>Building / Complex name *</label><input id="f-name" type="text" placeholder="e.g. Morewood Gardens"></div>
+      <div class="fg"><label>Monthly rent (inclusive) *</label><input id="f-rent" type="number" placeholder="e.g. 1050"></div>
+    </div>
+    <div class="fg">
+      <label>Address</label>
+      <input id="f-addr" type="text" placeholder="e.g. 123 Forbes Ave, Pittsburgh PA 15213" oninput="detectFromAddress()">
+      <div class="detecting" id="addr-detecting">Detecting neighborhood, buses &amp; WPIC distance…</div>
+      <div class="ok" id="addr-ok"></div>
+    </div>
+    <div class="fr">
+      <div class="fg">
+        <label>Neighborhood</label>
+        <select id="f-neighborhood" onchange="autoFill(true)">
+          <option value="">Select… (auto-detected from address)</option>
+          <option value="Oakland">Oakland</option>
+          <option value="South Oakland">South Oakland</option>
+          <option value="Shadyside">Shadyside</option>
+          <option value="Squirrel Hill">Squirrel Hill</option>
+          <option value="Bloomfield">Bloomfield</option>
+          <option value="Lawrenceville">Lawrenceville</option>
+          <option value="East Liberty">East Liberty</option>
+          <option value="Greenfield">Greenfield</option>
+          <option value="Other">Other</option>
+        </select>
+        <div class="ok" id="autofill-ok"></div>
+      </div>
+      <div class="fg"><label>Unit type</label>
+        <select id="f-type"><option value="Studio">Studio</option><option value="1BR">1 bedroom</option><option value="2BR">2 bedroom</option><option value="Room">Private room</option></select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="fg"><label>Status</label>
+        <select id="f-status"><option value="not-contacted">Not contacted</option><option value="contacted">Contacted</option><option value="applied">Applied</option><option value="waitlist">Waitlist</option><option value="rejected">Rejected</option></select>
+      </div>
+      <div class="fg"><label>Utilities included</label><input id="f-utilities" type="text" placeholder="e.g. Water + heat. Tenant pays electric."></div>
+    </div>
+    <div class="fr">
+      <div class="fg">
+        <label>Available from (move-in date)</label>
+        <input id="f-avail" type="date">
+        <div class="hint">Your deadline is July 1 2026 — anything after that gets flagged red</div>
+      </div>
+      <div class="fg"><label>Lease term</label>
+        <select id="f-lease">
+          <option value="">Unknown</option>
+          <option value="Month-to-month">Month-to-month</option>
+          <option value="6 months">6 months</option>
+          <option value="12 months">12 months</option>
+          <option value="15 months">15 months</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg">
+      <label>Zillow / listing URL</label>
+      <input id="f-url" type="text" placeholder="https://www.zillow.com/homedetails/…">
+      <div class="hint">Enables "View photos ↗" button on the listing card</div>
+    </div>
+    <div class="fg">
+      <label>Leasing office website</label>
+      <input id="f-leasing-url" type="text" placeholder="https://… leasing office or property management site">
+      <div class="hint">Save the leasing office link separately from the listing link</div>
+    </div>
+    <span class="fsec">Commute to WPIC — auto-filled, edit if needed</span>
+    <div class="fr">
+      <div class="fg"><label>Distance to WPIC (miles)</label><input id="f-dist" type="text" placeholder="e.g. 1.4"></div>
+      <div class="fg"><label>Transit commute time</label><input id="f-commute" type="text" placeholder="e.g. 14 min on 71A"></div>
+    </div>
+    <div class="fg"><label>Bus routes</label><input id="f-buses" type="text" placeholder="e.g. 71A, 71B, 61C — auto-filled by neighborhood"></div>
+    <span class="fsec">Nearby grocery stores — auto-filled, edit if needed</span>
+    <div class="fg"><label>Grocery stores (name + distance)</label><input id="f-grocery" type="text" placeholder="e.g. Giant Eagle (0.4mi), Trader Joe's (0.8mi)"></div>
+    <span class="fsec">Contact info</span>
+    <div class="fr">
+      <div class="fg"><label>Contact name / landlord</label><input id="f-contact" type="text" placeholder="e.g. Property Manager"></div>
+      <div class="fg"><label>Phone / email</label><input id="f-contactinfo" type="text" placeholder="e.g. 412-555-0100"></div>
+    </div>
+    <div class="fg"><label>Notes</label><textarea id="f-notes" placeholder="e.g. Toured 3/10, laundry in-unit, available June 1…"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeMainModal()">Cancel</button>
+      <button class="btn pri" onclick="saveListing()">Save listing</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const SK = 'erica_apts_v5';
+let apts = [], editId = null;
+
+const ND = {
+  'Oakland':       {buses:['71A','71B','71C','71D','54C','93'],   distMi:0.5,  dist:'0.3–0.8', commute:'5–15 min bus or walkable',     grocery:"Giant Eagle (0.5mi), Whole Foods (0.8mi), Trader Joe's (1.1mi)"},
+  'South Oakland': {buses:['71A','71B','61B','61C','93'],          distMi:0.9,  dist:'0.6–1.2', commute:'10–18 min bus',                grocery:"Whole Foods (1.0mi), Shop'n Save (0.9mi)"},
+  'Shadyside':     {buses:['71A','71B','71C','71D','P1'],          distMi:1.5,  dist:'1.2–1.8', commute:'12–20 min on 71 series',       grocery:"Whole Foods (0.4mi), Trader Joe's (0.6mi), Giant Eagle (0.8mi)"},
+  'Squirrel Hill': {buses:['61A','61B','61C','61D','P1'],          distMi:2.1,  dist:'1.8–2.5', commute:'18–28 min on 61 series',       grocery:"Giant Eagle Murray Ave (0.3mi), Aldi (0.5mi), Trader Joe's (0.7mi)"},
+  'Bloomfield':    {buses:['54C','71A','71B'],                     distMi:1.9,  dist:'1.5–2.2', commute:'15–25 min bus',                grocery:"Giant Eagle (0.6mi), Whole Foods (1.0mi)"},
+  'Lawrenceville': {buses:['54C','91','86'],                       distMi:3.0,  dist:'2.5–3.5', commute:'25–38 min, may need transfer', grocery:"Giant Eagle (0.8mi), Aldi (1.1mi)"},
+  'East Liberty':  {buses:['71A','71B','61A','P1'],                distMi:3.2,  dist:'2.8–3.8', commute:'22–35 min bus/busway',         grocery:"Whole Foods (0.2mi), Giant Eagle (0.4mi), Trader Joe's (0.5mi)"},
+  'Greenfield':    {buses:['61B','61C'],                           distMi:1.7,  dist:'1.4–2.0', commute:'15–25 min on 61 series',       grocery:"Giant Eagle Sq. Hill (1.2mi), Shop'n Save (0.8mi)"},
+};
+
+// ZIP code → neighborhood map for auto-detection
+const ZIP_MAP = {
+  '15213':'Oakland','15214':'North Side','15206':'East Liberty',
+  '15217':'Squirrel Hill','15232':'Shadyside','15224':'Bloomfield',
+  '15201':'Lawrenceville','15207':'Greenfield','15203':'South Side',
+  '15219':'Downtown','15222':'Downtown','15212':'North Side',
+};
+
+// Street/keyword → neighborhood
+const STREET_MAP = [
+  {keys:['forbes ave','fifth ave','craig st','bigelow','o\'hara','de soto','terrace','bouquet','semple','meyran'],n:'Oakland'},
+  {keys:['s bouquet','bates st','winthrop','dawson st','ward st','ruth st'],n:'South Oakland'},
+  {keys:['walnut st','ellsworth','baum blvd','aiken','moorewood','negley','center ave'],n:'Shadyside'},
+  {keys:['murray ave','forbes ave','beacon st','shady ave','nicholson','wilkins ave'],n:'Squirrel Hill'},
+  {keys:['liberty ave','friendship','penn ave 152','45th','44th','40th'],n:'Bloomfield'},
+  {keys:['butler st','40th','lawrenceville'],n:'Lawrenceville'},
+  {keys:['penn ave 152','highland','east liberty','negley ave'],n:'East Liberty'},
+  {keys:['greenfield','run blvd','becks run'],n:'Greenfield'},
+];
+
+function detectNeighborhoodFromAddress(addr) {
+  if (!addr || addr.length < 6) return null;
+  const a = addr.toLowerCase();
+  // ZIP check first (most reliable)
+  const zipMatch = a.match(/\b(1520\d|1521\d|1522\d)\b/);
+  if (zipMatch && ZIP_MAP[zipMatch[0]]) return ZIP_MAP[zipMatch[0]];
+  // Street keyword check
+  for (const entry of STREET_MAP) {
+    if (entry.keys.some(k => a.includes(k))) return entry.n;
+  }
+  // Neighborhood name in address
+  for (const n of Object.keys(ND)) {
+    if (a.includes(n.toLowerCase())) return n;
+  }
+  return null;
+}
+
+let detectTimer = null;
+function detectFromAddress() {
+  clearTimeout(detectTimer);
+  detectTimer = setTimeout(() => {
+    const addr = document.getElementById('f-addr').value;
+    const detected = detectNeighborhoodFromAddress(addr);
+    const detectingEl = document.getElementById('addr-detecting');
+    const okEl = document.getElementById('addr-ok');
+    if (addr.length > 8) {
+      detectingEl.style.display = 'block';
+      setTimeout(() => {
+        detectingEl.style.display = 'none';
+        if (detected && ND[detected]) {
+          const sel = document.getElementById('f-neighborhood');
+          if (!sel.value || sel.value === '') {
+            sel.value = detected;
+            autoFill(false);
+            okEl.textContent = '✓ Neighborhood detected: ' + detected;
+            okEl.style.display = 'block';
+          }
+        }
+      }, 600);
+    }
+  }, 500);
+}
+
+function autoFill(manual) {
+  const n = document.getElementById('f-neighborhood').value;
+  const nd = ND[n];
+  const okEl = document.getElementById('autofill-ok');
+  if (!nd) { okEl.style.display = 'none'; return; }
+  // Only fill empty fields
+  if (!document.getElementById('f-buses').value) document.getElementById('f-buses').value = nd.buses.join(', ');
+  if (!document.getElementById('f-dist').value) document.getElementById('f-dist').value = nd.distMi;
+  if (!document.getElementById('f-commute').value) document.getElementById('f-commute').value = nd.commute;
+  if (!document.getElementById('f-grocery').value) document.getElementById('f-grocery').value = nd.grocery;
+  if (manual) {
+    okEl.textContent = '✓ Bus routes, WPIC distance & grocery info auto-filled for ' + n;
+    okEl.style.display = 'block';
+    document.getElementById('addr-ok').style.display = 'none';
+  }
+}
+
+// ── SAMPLE DATA ───────────────────────────────────────────────────────────────
+const SAMPLE = [
+  {id:1,name:'Morewood Gardens',addr:'3955 Bigelow Blvd, Pittsburgh PA 15213',neighborhood:'Oakland',type:'1BR',rent:1100,status:'contacted',utilities:'Water, heat included',contact:'Office',contactinfo:'412-268-2606',notes:'Toured 3/10 — laundry on-site, 5 min walk to WPIC. Waitlist for June.',avail:'2026-06-01',lease:'12 months',dist:'0.4',commute:'8 min walk',buses:'71A, 71B, 71C, 71D, 54C',grocery:'Giant Eagle (0.5mi), Whole Foods (0.8mi)',url:'',added:Date.now()-3*86400000},
+  {id:2,name:'Craig Street Apts',addr:'425 Craig St, Pittsburgh PA 15213',neighborhood:'Oakland',type:'Studio',rent:950,status:'not-contacted',utilities:'All utilities included',contact:'',contactinfo:'',notes:'',avail:'2026-05-01',lease:'12 months',dist:'0.3',commute:'7 min walk',buses:'71A, 71B, 71C, 71D',grocery:'Giant Eagle (0.5mi), Whole Foods (0.8mi)',url:'',added:Date.now()-2*86400000},
+  {id:3,name:'Shadyside Manor',addr:'5500 Walnut St, Shadyside PA 15232',neighborhood:'Shadyside',type:'1BR',rent:1150,status:'applied',utilities:'Water + heat. Tenant pays electric (~$40/mo)',contact:'Lisa',contactinfo:'lisa@shadysidemanor.com',notes:'Applied 3/12. Background check submitted.',avail:'2026-06-01',lease:'12 months',dist:'1.4',commute:'14 min on 71A/71B',buses:'71A, 71B, 71C, 71D, P1',grocery:"Whole Foods (0.4mi), Trader Joe's (0.6mi)",url:'https://www.zillow.com/pittsburgh-pa/rentals/',added:Date.now()-86400000},
+  {id:4,name:'Squirrel Hill Studios',addr:'1800 Murray Ave, Squirrel Hill PA 15217',neighborhood:'Squirrel Hill',type:'Studio',rent:875,status:'not-contacted',utilities:'All utilities included',contact:'',contactinfo:'',notes:'Very affordable — check availability ASAP',avail:'',lease:'',dist:'2.0',commute:'22 min on 61C',buses:'61A, 61B, 61C, 61D',grocery:'Giant Eagle Murray Ave (0.3mi), Aldi (0.5mi)',url:'',added:Date.now()},
+];
+
+function load(){
+  try{const r=localStorage.getItem(SK);if(r)apts=JSON.parse(r);}catch(e){}
+  if(!apts.length){apts=SAMPLE;save();}
+}
+function save(){try{localStorage.setItem(SK,JSON.stringify(apts));}catch(e){alert('Could not save.');}}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function dbadge(d){
+  const n=parseFloat(d);if(!n)return'';
+  if(n<=1.2)return'<span class="dbadge close">Close</span>';
+  if(n<=2.5)return'<span class="dbadge med">Moderate</span>';
+  return'<span class="dbadge far">Further</span>';
+}
+
+const DEADLINE = new Date('2026-07-01');
+function availBadge(avail){
+  if(!avail)return'<span class="avail-badge unknown">📅 Date unknown — ask landlord</span>';
+  const d=new Date(avail+'T00:00:00');
+  const today=new Date();today.setHours(0,0,0,0);
+  if(d<=today)return'<span class="avail-badge now">✅ Available now</span>';
+  const diffDays=Math.round((d-today)/(1000*60*60*24));
+  if(d<DEADLINE){
+    if(diffDays<=30)return`<span class="avail-badge good">🟢 Available ${fmtDate(d)} (${diffDays}d away)</span>`;
+    return`<span class="avail-badge good">🟢 Available ${fmtDate(d)} — before deadline</span>`;
+  }
+  return`<span class="avail-badge late">🔴 Available ${fmtDate(d)} — after July 1 deadline</span>`;
+}
+function fmtDate(d){return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
+function updateDeadlineBanner(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const diff=Math.round((DEADLINE-today)/(1000*60*60*24));
+  const el=document.getElementById('deadline-text');
+  const banner=document.getElementById('deadline-banner');
+  if(!el)return;
+  if(diff>60){banner.style.background='var(--green-bg)';banner.style.color='var(--green-text)';el.textContent='⏳ '+diff+' days until your July 1 move-in deadline — good time to start applying!';}
+  else if(diff>30){banner.style.background='var(--amber-bg)';banner.style.color='var(--amber-text)';el.textContent='⚠️ '+diff+' days left — start applying now and sign a lease soon!';}
+  else if(diff>0){banner.style.background='var(--red-bg)';banner.style.color='var(--red-text)';el.textContent='🚨 Only '+diff+' days until July 1 — prioritise applying immediately!';}
+  else{banner.style.background='var(--bg2)';banner.style.color='var(--text2)';el.textContent='Your July 1 deadline has passed — update your tracker with your new address!';}
+}
+const SL={'not-contacted':'Not contacted','contacted':'Contacted','applied':'Applied','waitlist':'Waitlist','rejected':'Rejected'};
+
+function renderStats(){
+  const t=apts.length,nc=apts.filter(a=>a.status==='not-contacted').length,
+    c=apts.filter(a=>a.status==='contacted'||a.status==='waitlist').length,
+    ap=apts.filter(a=>a.status==='applied').length;
+  document.getElementById('stats').innerHTML=`
+    <div class="sc"><div class="sc-lbl">Total tracked</div><div class="sc-val">${t}</div></div>
+    <div class="sc"><div class="sc-lbl">Yet to contact</div><div class="sc-val a">${nc}</div></div>
+    <div class="sc"><div class="sc-lbl">In conversation</div><div class="sc-val b">${c}</div></div>
+    <div class="sc"><div class="sc-lbl">Applied</div><div class="sc-val g">${ap}</div></div>`;
+}
+
+function renderListings(){
+  const q=(document.getElementById('search-input').value||'').toLowerCase();
+  const fs=document.getElementById('filter-status').value;
+  const fd=parseFloat(document.getElementById('filter-dist').value)||0;
+  const sort=document.getElementById('filter-sort').value;
+  const fa=document.getElementById('filter-avail').value;
+  let list=apts.filter(a=>{
+    const mq=!q||a.name.toLowerCase().includes(q)||(a.addr||'').toLowerCase().includes(q)||(a.neighborhood||'').toLowerCase().includes(q);
+    const nd=ND[a.neighborhood]||{};
+    const distN=parseFloat(a.dist)||nd.distMi||99;
+    let mav=true;
+    if(fa==='now'){const d=a.avail?new Date(a.avail+'T00:00:00'):null;mav=!d||d<=new Date();}
+    if(fa==='before'){const d=a.avail?new Date(a.avail+'T00:00:00'):null;mav=!a.avail||d<new Date('2026-07-01');}
+    return mq&&(!fs||a.status===fs)&&(!fd||distN<=fd)&&mav;
+  });
+  if(sort==='avail-asc')list.sort((a,b)=>{const da=a.avail?new Date(a.avail):new Date('2099-01-01'),db=b.avail?new Date(b.avail):new Date('2099-01-01');return da-db;});
+  else if(sort==='dist-asc')list.sort((a,b)=>{const na=parseFloat(a.dist)||(ND[a.neighborhood]||{}).distMi||99,nb=parseFloat(b.dist)||(ND[b.neighborhood]||{}).distMi||99;return na-nb;});
+  else if(sort==='rent-asc')list.sort((a,b)=>a.rent-b.rent);
+  else if(sort==='rent-desc')list.sort((a,b)=>b.rent-a.rent);
+  else list.sort((a,b)=>b.added-a.added);
+
+  const grid=document.getElementById('apt-grid');
+  if(!list.length){grid.innerHTML='<div class="empty">No listings match. Adjust filters or add a listing.</div>';return;}
+  grid.innerHTML=list.map(a=>{
+    const nd=ND[a.neighborhood]||{};
+    const dv=a.dist||nd.dist||'';
+    const cv=a.commute||nd.commute||'';
+    const bv=a.buses||(nd.buses?nd.buses.join(', '):'');
+    const gv=a.grocery||nd.grocery||'';
+    const btags=bv?bv.split(',').map(b=>`<span class="bus-tag">${esc(b.trim())}</span>`).join(''):'<span style="color:var(--text3);font-size:11px">Not set</span>';
+    const grows=gv?gv.split(',').map(g=>`<div class="gr-row">🛒 ${esc(g.trim())}</div>`).join(''):'<span style="color:var(--text3);font-size:11px">Not set</span>';
+    const ob=a.rent>1200,hz=!!(a.url&&a.url.length>5);
+    return`<div class="apt-card ${a.status}">
+      <div class="apt-top">
+        <div class="apt-left"><div class="apt-name">${esc(a.name)}</div><div class="apt-addr">${esc(a.addr)}</div></div>
+        <div class="apt-right">
+          <div class="apt-rent ${ob?'over-budget':''}">$${a.rent}/mo${ob?' ⚠':''}</div>
+          <span class="badge ${a.status}">${SL[a.status]||a.status}</span>
+        </div>
+      </div>
+      ${hz?`<div class="z-strip"><div class="z-strip-info"><div class="z-strip-title">🔗 ${esc(a.name)} — listing</div><div class="z-strip-sub">View full photos, floor plan &amp; details</div></div><a href="${esc(a.url)}" target="_blank">View photos ↗</a></div>`:''}
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px;">
+        ${availBadge(a.avail)}
+        ${a.lease?`<span style="font-size:12px;color:var(--text2)">📋 ${esc(a.lease)} lease</span>`:''}
+        ${a['leasing-url']?`<a href="${esc(a['leasing-url'])}" target="_blank" style="font-size:12px;color:var(--blue);font-weight:600;">🏢 Leasing office ↗</a>`:''}
+      </div>
+      <div class="info-strip">
+        <div class="ib"><div class="ib-title">Distance to WPIC</div><div class="ib-body">
+          ${dv?`<span class="dist-big">${esc(dv)} mi</span>${dbadge(parseFloat(a.dist)||nd.distMi||0)}`:'<span style="color:var(--text3)">Not set</span>'}
+          ${cv?`<div style="margin-top:3px;font-size:12px;color:var(--text2)">${esc(cv)}</div>`:''}
+          <div style="margin-top:5px"><a href="https://www.google.com/maps/dir/${encodeURIComponent(a.addr||'Pittsburgh PA')}/3811+O'Hara+St+Pittsburgh+PA+15213" target="_blank" style="font-size:11px;color:var(--blue)">Directions to WPIC ↗</a></div>
+        </div></div>
+        <div class="ib"><div class="ib-title">Bus routes</div><div class="ib-body">${btags}
+          <div style="margin-top:6px"><a href="https://www.portauthority.org/schedules-and-maps/" target="_blank" style="font-size:11px;color:var(--blue)">PA schedules ↗</a></div>
+        </div></div>
+        <div class="ib"><div class="ib-title">Nearby grocery</div><div class="ib-body">${grows}
+          <div style="margin-top:5px"><a href="https://www.google.com/maps/search/grocery+stores+near+${encodeURIComponent(a.addr||'Pittsburgh PA')}" target="_blank" style="font-size:11px;color:var(--blue)">Find on map ↗</a></div>
+        </div></div>
+      </div>
+      <div class="apt-meta">
+        ${a.utilities?`<span>✓ ${esc(a.utilities)}</span>`:''}
+        ${a.neighborhood?`<span>${esc(a.neighborhood)}</span>`:''}
+        ${a.type?`<span>${esc(a.type)}</span>`:''}
+        ${a.contact?`<span>Contact: ${esc(a.contact)}${a.contactinfo?' · '+esc(a.contactinfo):''}</span>`:''}
+      </div>
+      ${a.notes?`<div class="apt-notes">${esc(a.notes)}</div>`:''}
+      <div class="apt-actions">
+        ${a.status==='not-contacted'?`<button class="btn sm" onclick="updateStatus(${a.id},'contacted')">Mark contacted</button>`:''}
+        ${a.status==='contacted'?`<button class="btn sm" onclick="updateStatus(${a.id},'applied')">Mark applied</button>`:''}
+        ${hz?`<button class="btn sm z" onclick="window.open('${esc(a.url)}','_blank')">View photos ↗</button>`:''}
+        <button class="btn sm" onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(a.addr)}','_blank')">Map ↗</button>
+        <button class="btn sm ai" onclick="askAboutApartment(${a.id})">Ask AI ✦</button>
+        <button class="btn sm" onclick="openEditModal(${a.id})">Edit</button>
+        <button class="btn sm danger" onclick="deleteListing(${a.id})">Remove</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderPipeline(){
+  const stages=['not-contacted','contacted','applied','waitlist'];
+  const lbl={'not-contacted':'To contact','contacted':'In talks','applied':'Applied','waitlist':'Waitlist'};
+  document.getElementById('pipeline-cols').innerHTML=stages.map(s=>{
+    const items=apts.filter(a=>a.status===s);
+    return`<div class="pipe-col"><h4>${lbl[s]} (${items.length})</h4>${items.length?items.map(a=>`
+      <div class="pipe-item" onclick="switchTab('tracker');setTimeout(()=>{document.getElementById('search-input').value='${esc(a.name)}';renderListings();},50)">
+        <div class="pn">${esc(a.name)}</div>
+        <div class="pm">$${a.rent}/mo · ${esc(a.neighborhood||'')}${a.dist?' · '+a.dist+' mi':''}</div>
+      </div>`).join(''):'<div style="font-size:12px;color:var(--text2);padding:6px 0">None yet</div>'}</div>`;
+  }).join('');
+}
+
+// ── AI ASSISTANT ──────────────────────────────────────────────────────────────
+const SYSTEM_PROMPT = `You are a friendly, knowledgeable Pittsburgh apartment hunting assistant helping Erica, who:
+- Works at UPMC Western Psychiatric Institute & Clinic (WPIC) at 3811 O'Hara St, Pittsburgh PA 15213 (Oakland neighborhood)
+- Needs bus-accessible housing — she does not have a car
+- Has a strict budget of $1,200/month INCLUSIVE of all utilities (water, heat, electric)
+- Is new to Pittsburgh and unfamiliar with the city
+- Is a Research Project Assistant and Master of Data Science student at Pitt
+
+Key Pittsburgh facts you know well:
+- Port Authority bus routes: 71A/71B/71C/71D serve Forbes/Fifth Ave corridor directly past WPIC. 61A/61B/61C/61D serve Squirrel Hill/Greenfield into Oakland. 54C serves Bloomfield/Liberty Ave. P1 is the East Busway (express but goes downtown, then connect). 93 serves Oakland/South Oakland.
+- WPIC stop: buses stop on Fifth Ave at O'Hara St
+- Neighborhoods close to WPIC: Oakland (walkable, 0.3–0.8mi), South Oakland (0.6–1.2mi), Shadyside (1.2–1.8mi via 71 series), Squirrel Hill (1.8–2.5mi via 61 series), Greenfield (1.4–2mi via 61 series), Bloomfield (1.5–2.2mi via 54C)
+- Grocery stores: Giant Eagle (main chain, multiple locations), Whole Foods (Shadyside/East Liberty), Trader Joe's (Shadyside/East Liberty/Shadyside), Aldi (Squirrel Hill), Shop'n Save (South Oakland/Greenfield)
+- Pittsburgh winters are harsh — avoid "tenant pays electric" unless capped, as electric bills can spike $150+/mo
+- Utilities-inclusive studios most common/affordable in South Oakland and Greenfield ($800–$1,150)
+- Transit App (free) is the best app for real-time Port Authority arrivals
+
+Be warm, specific, practical, and reassuring. Keep answers concise but complete. If asked about a specific address, give detailed commute + neighborhood info. Always relate answers back to Erica's situation (budget, commute, no car).`;
+
+let chatHistory = [];
+
+async function callClaude(userMsg) {
+  chatHistory.push({role:'user', content: userMsg});
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      system: SYSTEM_PROMPT,
+      messages: chatHistory
+    })
+  });
+  const data = await resp.json();
+  const reply = data.content?.[0]?.text || 'Sorry, I had trouble responding. Please try again.';
+  chatHistory.push({role:'assistant', content: reply});
+  return reply;
+}
+
+function addMessage(text, isUser) {
+  const chat = document.getElementById('ai-chat');
+  const div = document.createElement('div');
+  div.className = 'ai-msg' + (isUser ? ' user' : '');
+  div.innerHTML = `<div class="ai-avatar ${isUser?'user':'bot'}">${isUser?'E':'✦'}</div><div class="ai-bubble">${esc(text).replace(/\n/g,'<br>')}</div>`;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function addTyping() {
+  const chat = document.getElementById('ai-chat');
+  const div = document.createElement('div');
+  div.className = 'ai-msg'; div.id = 'typing-indicator';
+  div.innerHTML = `<div class="ai-avatar bot">✦</div><div class="ai-bubble"><div class="ai-typing"><span></span><span></span><span></span></div></div>`;
+  chat.appendChild(div); chat.scrollTop = chat.scrollHeight;
+}
+
+function removeTyping() {
+  const el = document.getElementById('typing-indicator');
+  if (el) el.remove();
+}
+
+async function sendAI() {
+  const input = document.getElementById('ai-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+  addMessage(msg, true);
+  addTyping();
+  try {
+    const reply = await callClaude(msg);
+    removeTyping();
+    addMessage(reply, false);
+  } catch(e) {
+    removeTyping();
+    addMessage('Connection error. Please check your internet and try again.', false);
+  }
+}
+
+function askQuick(el) {
+  document.getElementById('ai-input').value = el.textContent;
+  switchTab('ai');
+  sendAI();
+}
+
+function askAboutApartment(id) {
+  const a = apts.find(x => x.id === id);
+  if (!a) return;
+  const q = `Tell me about ${a.name} at ${a.addr}. It's in ${a.neighborhood||'Pittsburgh'}, renting at $${a.rent}/mo (${a.utilities||'utilities TBD'}). How is the commute to WPIC, what buses would I take, and what are the pros and cons for my situation?`;
+  switchTab('ai');
+  document.getElementById('ai-input').value = q;
+  sendAI();
+}
+
+// ── CRUD ──────────────────────────────────────────────────────────────────────
+function updateStatus(id,s){const a=apts.find(x=>x.id===id);if(a){a.status=s;save();renderAll();}}
+function deleteListing(id){if(!confirm('Remove this listing?'))return;apts=apts.filter(x=>x.id!==id);save();renderAll();}
+
+const FIELDS=['name','addr','contact','contactinfo','utilities','notes','url','dist','commute','buses','grocery'];
+function resetModal(){
+  FIELDS.forEach(f=>{const el=document.getElementById('f-'+f);if(el)el.value='';});
+  document.getElementById('f-rent').value='';
+  document.getElementById('f-status').value='not-contacted';
+  document.getElementById('f-type').value='Studio';
+  document.getElementById('f-neighborhood').value='';
+  document.getElementById('f-lease').value='';
+  document.getElementById('autofill-ok').style.display='none';
+  document.getElementById('autofill-ok').textContent='';
+  document.getElementById('addr-ok').style.display='none';
+  document.getElementById('addr-ok').textContent='';
+  document.getElementById('addr-detecting').style.display='none';
+  document.getElementById('z-preview').style.display='none';
+}
+
+function openAddModal(){editId=null;document.getElementById('modal-title').textContent='Add listing';resetModal();document.getElementById('main-overlay').classList.add('open');}
+function openEditModal(id){
+  const a=apts.find(x=>x.id===id);if(!a)return;
+  editId=id;document.getElementById('modal-title').textContent='Edit listing';resetModal();
+  FIELDS.forEach(f=>{const el=document.getElementById('f-'+f);if(el)el.value=a[f]||'';});
+  document.getElementById('f-rent').value=a.rent||'';
+  document.getElementById('f-status').value=a.status||'not-contacted';
+  document.getElementById('f-type').value=a.type||'Studio';
+  document.getElementById('f-neighborhood').value=a.neighborhood||'';
+  document.getElementById('f-lease').value=a.lease||'';
+  document.getElementById('main-overlay').classList.add('open');
+}
+
+function saveListing(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){alert('Please enter a building name.');return;}
+  const rent=parseInt(document.getElementById('f-rent').value)||0;
+  if(rent>1200&&!confirm(`$${rent}/mo exceeds your $1,200 budget. Save anyway?`))return;
+  const data={name,rent};
+  FIELDS.filter(f=>f!=='name').forEach(f=>{const el=document.getElementById('f-'+f);if(el)data[f]=el.value||'';});
+  data.neighborhood=document.getElementById('f-neighborhood').value;
+  data.type=document.getElementById('f-type').value;
+  data.status=document.getElementById('f-status').value;
+  data.lease=document.getElementById('f-lease').value;
+  // Auto-detect neighborhood if still blank
+  if(!data.neighborhood&&data.addr){const d=detectNeighborhoodFromAddress(data.addr);if(d)data.neighborhood=d;}
+  // Auto-fill commute fields if blank
+  const nd=ND[data.neighborhood]||{};
+  if(!data.buses&&nd.buses)data.buses=nd.buses.join(', ');
+  if(!data.dist&&nd.distMi)data.dist=String(nd.distMi);
+  if(!data.commute&&nd.commute)data.commute=nd.commute;
+  if(!data.grocery&&nd.grocery)data.grocery=nd.grocery;
+
+  if(editId){const i=apts.findIndex(x=>x.id===editId);if(i!==-1)apts[i]={...apts[i],...data};}
+  else{data.id=Date.now();data.added=Date.now();apts.unshift(data);}
+  save();closeMainModal();renderAll();
+}
+
+function closeMainModal(){document.getElementById('main-overlay').classList.remove('open');}
+function closeBg(e,id){if(e.target.id===id)document.getElementById(id).classList.remove('open');}
+
+// ── ZILLOW IMPORT ─────────────────────────────────────────────────────────────
+function openZillowManual(){
+  openAddModal();
+  document.getElementById('z-preview').style.display='block';
+  document.getElementById('z-preview-text').textContent='Paste the Zillow listing URL in the "Zillow / listing URL" field below. Type or paste the address and rent — the neighborhood, buses, WPIC distance, and grocery info will auto-fill.';
+}
+
+function importFromUrl(){
+  const url=document.getElementById('manual-url').value.trim();
+  if(!url){alert('Please paste a listing URL first.');return;}
+  openAddModal();
+  document.getElementById('f-url').value=url;
+  document.getElementById('z-preview').style.display='block';
+  document.getElementById('z-preview-text').textContent='URL saved! Now fill in the address and rent from the Zillow page. The neighborhood, bus routes, and grocery info will auto-fill once you enter the address.';
+  document.getElementById('manual-url').value='';
+}
+
+function checkForZillowImport(){
+  try{
+    const raw=localStorage.getItem('apt_tracker_import');
+    if(!raw)return;
+    const d=JSON.parse(raw);
+    if(Date.now()-d.ts>60000){localStorage.removeItem('apt_tracker_import');return;}
+    localStorage.removeItem('apt_tracker_import');
+    openAddModal();
+    if(d.addr)document.getElementById('f-addr').value=d.addr;
+    if(d.rent)document.getElementById('f-rent').value=d.rent;
+    if(d.url)document.getElementById('f-url').value=d.url;
+    // Auto-detect neighborhood
+    const detected=detectNeighborhoodFromAddress(d.addr||'');
+    if(detected&&ND[detected]){
+      document.getElementById('f-neighborhood').value=detected;
+      autoFill(false);
+      document.getElementById('addr-ok').textContent='✓ Neighborhood auto-detected: '+detected+' — buses, WPIC distance & grocery info filled';
+      document.getElementById('addr-ok').style.display='block';
+    }
+    document.getElementById('z-preview').style.display='block';
+    document.getElementById('z-preview-text').textContent='Imported from Zillow: '+(d.addr||'address not detected')+' · '+(d.rent?'$'+d.rent+'/mo':'rent not detected')+'. Review and save.';
+  }catch(e){localStorage.removeItem('apt_tracker_import');}
+}
+
+// ── BOOKMARKLET ───────────────────────────────────────────────────────────────
+function buildBookmarklet(){
+  const code=`(function(){
+    var addr='',rent='',url=window.location.href;
+    var h1=document.querySelector('h1');if(h1)addr=h1.textContent.trim();
+    var p=document.querySelector('[data-testid="price"]')||document.querySelector('.ds-summary-row .ds-value');
+    if(p){var t=p.textContent.replace(/[^0-9]/g,'');if(t)rent=t;}
+    try{localStorage.setItem('apt_tracker_import',JSON.stringify({url:url,addr:addr,rent:rent,ts:Date.now()}));}catch(e){}
+    alert('Listing captured!\\n\\n'+(addr||'Address: not detected — enter manually')+'\\n'+(rent?'Rent: $'+rent+'/mo':'Rent: not detected — enter manually')+'\\n\\nSwitch to your apartment tracker tab — a form will open automatically with the details pre-filled.');
+  })();`;
+  document.getElementById('bm-link').href='javascript:'+encodeURIComponent(code);
+}
+
+// ── MISC ──────────────────────────────────────────────────────────────────────
+function switchTab(id){
+  const ids=['tracker','pipeline','buses','search','ai','setup'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',ids[i]===id));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if(id==='pipeline')renderPipeline();
+  if(id==='setup')buildBookmarklet();
+}
+function doSearch(site){
+  const n=document.getElementById('s-n').value;
+  if(site==='zillow')window.open('https://www.zillow.com/pittsburgh-pa/rentals/?searchQueryState=%7B%22filterState%22%3A%7B%22price%22%3A%7B%22max%22%3A1200%7D%7D%7D','_blank');
+  else window.open('https://www.apartments.com/'+(n||'pittsburgh').toLowerCase().replace(/\s+/g,'-')+'-pa/under-1200/','_blank');
+}
+function renderAll(){renderStats();renderListings();}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+// ── EXPORT / IMPORT ──────────────────────────────────────────────────────────
+function exportData(){
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    version: 'erica_apts_v5',
+    count: apts.length,
+    apartments: apts
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const date = new Date().toISOString().slice(0,10);
+  a.download = 'apt-tracker-backup-' + date + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✓ Backup downloaded — ' + apts.length + ' listings saved');
+}
+
+function importData(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      const data = JSON.parse(e.target.result);
+      // Accept both raw array or wrapped object
+      const incoming = Array.isArray(data) ? data : (data.apartments || []);
+      if(!incoming.length){ alert('No listings found in this backup file.'); return; }
+      const choice = confirm(
+        'Import ' + incoming.length + ' listings from backup?\n\n' +
+        'MERGE — adds to your existing ' + apts.length + ' listings (recommended)\n' +
+        'Click Cancel to REPLACE all current listings instead.'
+      );
+      if(choice){
+        // Merge: add only listings not already tracked (by name+addr)
+        const existing = new Set(apts.map(a => a.name+'|'+a.addr));
+        const toAdd = incoming.filter(a => !existing.has(a.name+'|'+a.addr));
+        apts = [...toAdd, ...apts];
+        showToast('✓ Merged ' + toAdd.length + ' new listings (' + (incoming.length - toAdd.length) + ' duplicates skipped)');
+      } else {
+        if(!confirm('This will REPLACE all ' + apts.length + ' current listings with the ' + incoming.length + ' from your backup. Are you sure?')) return;
+        apts = incoming;
+        showToast('✓ Replaced with ' + apts.length + ' listings from backup');
+      }
+      save();
+      renderAll();
+    } catch(err){
+      alert('Could not read backup file. Make sure it is a valid JSON backup from this tracker.');
+    }
+    // Reset file input so same file can be re-imported if needed
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function showToast(msg){
+  let toast = document.getElementById('toast');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a18;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { toast.style.opacity = '0'; }, 3000);
+}
+
+load();
+renderAll();
+updateDeadlineBanner();
+buildBookmarklet();
+setTimeout(checkForZillowImport,600);
+setInterval(checkForZillowImport,2000);
+</script>
+</body>
+</html>
+
